@@ -55,7 +55,8 @@ export default {
         left: '-100%'
       },
       tooltopContent: {},
-      showModal: false
+      showModal: false,
+      timer: null
     }
   },
   mounted() {
@@ -66,6 +67,7 @@ export default {
     // this.initContent('/home/box')
     this.$refs.tMask.showLoading = true
     this.publicInit(0)
+    this.openAutoRotate() // 10秒后开启自动旋转
     setTimeout(() => {
       this.$refs.tMask.showLoading = false
     }, 500)
@@ -145,7 +147,6 @@ export default {
     },
     publicInit(index) {
       const currentItem = this.dataList[index]
-      this.controls.autoRotate = false // 自动旋转
       let boxGeometry = new THREE.BoxGeometry(10, 10, 10)
       let boxMaterials = []
       this.picList.forEach((item) => {
@@ -158,7 +159,6 @@ export default {
       this.box.geometry.scale(10, 10, -10)
       this.scene.add(this.box)
       this.changeContentAndtips(currentItem, index)
-      this.openAutoRotate() // 10秒后开启自动旋转
     },
     addTipsSprite(index = 0) {
       const loader = new GifLoader()
@@ -212,7 +212,7 @@ export default {
     },
     onMouseClick(e) {
       e.preventDefault()
-      this.controls.autoRotate = false // 自动旋转
+      // this.controls.autoRotate = false // 自动旋转
       let element = this.$refs.threeDBox
       let raycaster = new THREE.Raycaster()
       let mouse = new THREE.Vector2()
@@ -325,7 +325,10 @@ export default {
       this.$refs.tImage.getImgList(content)
     },
     openAutoRotate() {
-      setTimeout(() => {
+      this.controls.autoRotate = false
+      console.log('啥啊')
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.controls.autoRotate = true // 自动旋转
       }, 10000)
     }
